@@ -5,10 +5,12 @@ import { Avatar, AvatarImage } from './ui/avatar'
 import { Bookmark } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { toast } from 'sonner'
+import { useNavigate } from 'react-router-dom'
 
 const LatestJobCard = ({job}) => {
     const [isSaved, setIsSaved] = useState(false);
     const { authUser } = useSelector(store => store.auth);
+    const navigate = useNavigate();
 
     const daysAgoFunction = (mongodbTime) => {
         const createdAt = new Date(mongodbTime);
@@ -52,8 +54,24 @@ const LatestJobCard = ({job}) => {
         setIsSaved(!isSaved);
     }
 
+    const handleCardClick = (e) => {
+        // Prevent navigation if clicking on buttons or bookmark
+        if (e.target.closest('button')) {
+            return;
+        }
+        navigate(`/description/${job?._id}`);
+    }
+
+    const handleDetailsClick = (e) => {
+        e.stopPropagation(); // Prevent card click event
+        navigate(`/description/${job?._id}`);
+    }
+
     return (
-        <div className='p-4 sm:p-5 rounded-md shadow-xl bg-white border border-gray-100 cursor-pointer h-[420px] sm:h-[380px] flex flex-col'>
+        <div 
+            className='p-4 sm:p-5 rounded-md shadow-xl bg-white border border-gray-100 cursor-pointer h-[420px] sm:h-[380px] flex flex-col hover:shadow-2xl transition-shadow duration-200'
+            onClick={handleCardClick}
+        >
             <div className='flex items-center justify-between'>
                 <p className='text-xs sm:text-sm text-gray-500'>{daysAgoFunction(job?.createdAt) === 0 ? 'Today' : `${daysAgoFunction(job?.createdAt)} days ago`}</p>
                 <Button 
@@ -86,7 +104,13 @@ const LatestJobCard = ({job}) => {
                 <Badge className={'text-[#7209b7] font-bold text-xs sm:text-sm'} variant={'ghost'}>{job?.salary}LPA</Badge>
             </div>
             <div className='flex flex-col sm:flex-row items-stretch gap-2 mt-4'>
-                <Button variant="outline" className="rounded-lg flex-1">Details</Button>
+                <Button 
+                    onClick={handleDetailsClick} 
+                    variant="outline" 
+                    className="rounded-lg flex-1"
+                >
+                    Details
+                </Button>
                 <Button 
                     className={`rounded-lg flex-1 transition-all duration-200 ${isSaved ? 'bg-[#F83002] hover:bg-[#d42a02]' : 'bg-[#7209b7] hover:bg-[#5f32ad]'}`}
                     onClick={handleSaveJob}

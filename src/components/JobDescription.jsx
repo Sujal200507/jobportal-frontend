@@ -20,6 +20,11 @@ const JobDescription = () => {
   const params = useParams();
 
   const applyJobHandler = async () => {
+    if (!authUser) {
+      toast.error("Please login to apply for this job");
+      return;
+    }
+
     try {
       axios.defaults.withCredentials = true;
       const res = await axios.get(`https://portal-x2e7.onrender.com/api/v1/application/apply/${params.id}`);
@@ -100,7 +105,7 @@ const JobDescription = () => {
                       : "bg-white text-purple-600 hover:bg-gray-100"
                   }`}
                 >
-                  {isApplied ? "Already Applied" : "Apply Now"}
+                  {isApplied ? "Already Applied" : authUser ? "Apply Now" : "Login to Apply"}
                 </Button>
               </div>
             </div>

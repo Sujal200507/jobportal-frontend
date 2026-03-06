@@ -8,7 +8,7 @@ const Navbar = () => {
     const { authUser } = useSelector(store => store.auth);
     const [menuOpen, setMenuOpen] = useState(false);
     return (
-        <div className='bg-white'>
+        <div className='bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100'>
             <div className='flex flex-wrap items-center justify-between mx-auto max-w-7xl h-16 px-4 sm:px-6 lg:px-8'>
                 <div className="min-w-[120px] flex items-center">
                     <h1 className='text-2xl font-bold hover:scale-105 transition-transform duration-200 cursor-pointer'>
